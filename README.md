@@ -1,1 +1,1 @@
-# tamx_msa
+# tmax_msa
