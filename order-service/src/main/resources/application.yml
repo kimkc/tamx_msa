@@ -12,23 +12,28 @@ spring:
       path: /h2-console
   jpa:
     hibernate:
-      ddl-auto: create-drop
+#      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     generate-ddl: true
-    database: h2
+#    database: h2
     defer-datasource-initialization: true
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#    password:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/mydb
+    username: root
+    password: 1234
 
-# ??? ?????
+# regist eureka server
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
-    # ???? ??, ????
+    # eureka server url, instance make us to understand random port in multi order service
     eureka-server-url:
       defaultZone: http://localhost:8761/eureka
   instance:

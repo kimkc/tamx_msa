@@ -9,18 +9,14 @@ import com.example.userservice.vo.ResponseUser;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,17 +26,17 @@ public class UsersController {
 
     private final Greeting greeting;
     private final UserService userService;
-//    private Environment env;
-//
-//    @Autowired
-//    public UsersController(Environment env){
-//        this.env = env;
-//    }
+    private final Environment env;
 
     @GetMapping("/health_check")
-    public String status(HttpServletRequest request){
+    public String status(HttpServletRequest request) {
 
-        return String.format("It's Working in User Service %s", request.getServerPort());
+        return String.format("It's Working in User Service," +
+                "port(local.server.port)=%s, port(server.port)=%s" +
+                "token_secret=%s, token_expiration_time=%s, gateway_ip=%s",
+                env.getProperty("local.server.port"), env.getProperty("server.port"),
+                env.getProperty("token.secret"), env.getProperty("token.expiration_time"), env.getProperty("gateway.ip")
+        );
     }
 
     @GetMapping("/welcome")

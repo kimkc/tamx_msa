@@ -1,6 +1,5 @@
 server:
-  port: 8000
-
+  port: 9000
 eureka:
   client:
     register-with-eureka: true
@@ -30,10 +29,37 @@ spring:
             - AddResponseHeader=second-response, secondResponseHeader2
         - id: user-service
           predicates:
-            - Path=/user-service/**
+            - Path=/user-service/login
+            - Method=POST
           uri: lb://USER-SERVICE
           filters:
+            - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          uri: lb://USER-SERVICE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET, POST
+          uri: lb://USER-SERVICE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          predicates:
+            - Path=/user-service/**
+            - Method=GET
+          uri: lb://USER-SERVICE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
@@ -46,3 +72,10 @@ spring:
             - Path=/order-service/**
           filters:
             - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace, busrefresh
