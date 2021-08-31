@@ -10,8 +10,8 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>ecoomerce</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>ecoomerce</name>
+    <version>1.0</version>
+    <name>service-discovery</name>
     <description>ecoomerce</description>
     <properties>
         <java.version>11</java.version>

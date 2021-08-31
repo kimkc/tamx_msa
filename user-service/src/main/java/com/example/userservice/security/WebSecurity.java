@@ -28,7 +28,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/health_check/**").permitAll();
         http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
         http.authorizeRequests().antMatchers("/**")
-                        .access("hasIpAddress('127.0.0.1') or hasIpAddress('192.168.2.1')")
+                        .hasIpAddress(env.getProperty("gateway.ip"))
+//                        .access("hasIpAddress('127.0.0.1') or hasIpAddress('172.18.0.1')")
                         .and()
                         .addFilter(getAuthenticationFilter());
 

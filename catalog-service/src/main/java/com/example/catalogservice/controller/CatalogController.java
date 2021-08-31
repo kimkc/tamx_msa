@@ -5,8 +5,8 @@ import com.example.catalogservice.jpa.CatalogRepository;
 import com.example.catalogservice.service.CatalogService;
 import com.example.catalogservice.vo.ResponseCatalog;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/")
+@Slf4j
 public class CatalogController {
     private final Environment env;
     private final CatalogService catalogService;
@@ -47,10 +47,11 @@ public class CatalogController {
 
     @GetMapping("/catalogs/{prodcutId}")
     public ResponseEntity<ResponseCatalog> getCatalog(@PathVariable("prodcutId") String productId){
+        log.info("Before retrieve catalgos data");
         CatalogEntity catalog = catalogRepository.findByProductId(productId);
 
         ResponseCatalog result = new ModelMapper().map(catalog, ResponseCatalog.class);
-
+        log.info("After retrieve catalgos data");
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

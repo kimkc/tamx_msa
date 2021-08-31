@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService{
     private final RestTemplate restTemplate;
     private final Environment env;
     private final OrderServiceClient orderServiceClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -85,7 +88,16 @@ public class UserServiceImpl implements UserService{
 //                        });
 //
 //        List<ResponseOrder> orderList = orderListResponse.getBody();
-        List<ResponseOrder> orderList = orderServiceClient.getOrder(userId);
+        /* Error decoder 포함 원래 try catch로 감싸져 있음*/
+//        List<ResponseOrder> orderList = orderServiceClient.getOrder(userId);
+
+        /*circuit Breaker */
+        log.info("Before call order-service");
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        List<ResponseOrder> orderList = circuitBreaker.run(() -> orderServiceClient.getOrder(userId),
+                throwable -> new ArrayList<>());
+        log.info("After call order-service");
+
         userDto.setOrders(orderList);
 
         return userDto;

@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  myweb:
+    image: mynode:latest
+    ports:
+      - "18080:8080"
+    depends_on: 
+      - mydb
+  mydb:
+    image: mariadb:latest
+    volumes: 
+      - D:\shared_dbdata:/var/lib/mysql
+    environment: 
+      MARIADB_ROOT_PASSWORD: test1357
+      MARIADB_DATABASE: mydb
+    ports:
+      - "23306:3306"

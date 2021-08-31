@@ -27,6 +27,13 @@ spring:
     url: jdbc:mariadb://127.0.0.1:3306/mydb
     username: root
     password: 1234
+  zipkin:
+    base-url: http://localhost:9411
+    enable: true
+  sleuth:
+    sampler:
+      probability: 1.0
+
 
 # regist eureka server
 eureka:

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -84,13 +85,29 @@ public class OrderController {
     }
 
     @GetMapping(value= "/{userId}/orders")
-    public ResponseEntity<List<ResponseOrder>> getOrder(@PathVariable("userId") String userId){
+    public ResponseEntity<List<ResponseOrder>> getOrder(@PathVariable("userId") String userId) throws Exception{
+        log.info("Before retrieve orders data");
         Iterable<OrderEntity> orderList = orderService.getOrdersByUserId(userId);
         List<ResponseOrder> result = new ArrayList<>();
         orderList.forEach(v -> {
             result.add(new ModelMapper().map(v, ResponseOrder.class));
         });
 
+        //강제로 에러 추가
+//        Random rnd = new Random(System.currentTimeMillis());
+//        int time = rnd.nextInt(3);
+//        if(time % 2 == 0){
+//            try{
+//                Thread.sleep(10000);
+//                throw new Exception("에러 발생!");
+//            }catch (Exception ex){
+//                log.warn(ex.getMessage());
+//            }
+//        }
+
+        log.info("After retrieve orders data");
+
         return ResponseEntity.status(HttpStatus.OK).body(result);
+//        throw new Exception("Server not working!");
     }
 }
